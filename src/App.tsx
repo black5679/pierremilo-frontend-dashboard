@@ -2,8 +2,6 @@ import React from 'react';
 
 import Routes from './routes/Routes';
 
-import { configureFakeBackend } from './helpers';
-
 // Themes
 
 // For Default import Default.scss
@@ -23,9 +21,6 @@ import './assets/scss/Default.scss';
 
 // For Material demo import Material.scss
 // import './assets/scss/Material.scss';
-
-// configure fake backend
-configureFakeBackend();
 
 const App = () => {
     return (

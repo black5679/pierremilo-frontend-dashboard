@@ -20,8 +20,8 @@ import { AuthActionTypes } from './constants';
 
 interface UserData {
     payload: {
-        username: string;
-        password: string;
+        correo: string;
+        contrasenia: string;
         fullname: string;
         email: string;
     };
@@ -34,9 +34,9 @@ const api = new APICore();
  * Login the user
  * @param {*} payload - username and password
  */
-function* login({ payload: { username, password }, type }: UserData): SagaIterator {
+function* login({ payload: { correo, contrasenia }, type }: UserData): SagaIterator {
     try {
-        const response = yield call(loginApi, { username, password });
+        const response = yield call(loginApi, { correo, contrasenia });
         const user = response.data;
         // NOTE - You can change this according to response format from your api
         api.setLoggedInUser(user);
@@ -63,9 +63,9 @@ function* logout(): SagaIterator {
     }
 }
 
-function* signup({ payload: { fullname, email, password } }: UserData): SagaIterator {
+function* signup({ payload: { fullname, email, contrasenia } }: UserData): SagaIterator {
     try {
-        const response = yield call(signupApi, { fullname, email, password });
+        const response = yield call(signupApi, { fullname, email, contrasenia });
         const user = response.data;
         // api.setLoggedInUser(user);
         // setAuthorization(user['token']);
@@ -77,9 +77,9 @@ function* signup({ payload: { fullname, email, password } }: UserData): SagaIter
     }
 }
 
-function* forgotPassword({ payload: { username } }: UserData): SagaIterator {
+function* forgotPassword({ payload: { correo } }: UserData): SagaIterator {
     try {
-        const response = yield call(forgotPasswordApi, { username });
+        const response = yield call(forgotPasswordApi, { correo });
         yield put(authApiResponseSuccess(AuthActionTypes.FORGOT_PASSWORD, response.data));
     } catch (error: any) {
         yield put(authApiResponseError(AuthActionTypes.FORGOT_PASSWORD, error));
