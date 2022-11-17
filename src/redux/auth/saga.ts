@@ -21,7 +21,7 @@ import { AuthActionTypes } from './constants';
 interface UserData {
     payload: {
         correo: string;
-        contrasenia: string;
+        password: string;
         fullname: string;
         email: string;
     };
@@ -34,9 +34,9 @@ const api = new APICore();
  * Login the user
  * @param {*} payload - username and password
  */
-function* login({ payload: { correo, contrasenia }, type }: UserData): SagaIterator {
+function* login({ payload: { correo, password }, type }: UserData): SagaIterator {
     try {
-        const response = yield call(loginApi, { correo, contrasenia });
+        const response = yield call(loginApi, { correo, password });
         const user = response.data;
         // NOTE - You can change this according to response format from your api
         api.setLoggedInUser(user);
@@ -63,12 +63,10 @@ function* logout(): SagaIterator {
     }
 }
 
-function* signup({ payload: { fullname, email, contrasenia } }: UserData): SagaIterator {
+function* signup({ payload: { fullname, email, password } }: UserData): SagaIterator {
     try {
-        const response = yield call(signupApi, { fullname, email, contrasenia });
+        const response = yield call(signupApi, { fullname, email, password });
         const user = response.data;
-        // api.setLoggedInUser(user);
-        // setAuthorization(user['token']);
         yield put(authApiResponseSuccess(AuthActionTypes.SIGNUP_USER, user));
     } catch (error: any) {
         yield put(authApiResponseError(AuthActionTypes.SIGNUP_USER, error));

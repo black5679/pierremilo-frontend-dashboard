@@ -52,6 +52,7 @@ const OrderDetails = React.lazy(() => import('../pages/apps/Ecommerce/OrderDetai
 const Sellers = React.lazy(() => import('../pages/apps/Ecommerce/Sellers'));
 const Cart = React.lazy(() => import('../pages/apps/Ecommerce/Cart'));
 const Checkout = React.lazy(() => import('../pages/apps/Ecommerce/Checkout'));
+const Usuarios = React.lazy(() => import('../pages/usuario/Usuarios'));
 // - crm pages
 const CRMDashboard = React.lazy(() => import('../pages/apps/CRM/Dashboard/'));
 const CRMContacts = React.lazy(() => import('../pages/apps/CRM/Contacts/'));
@@ -268,6 +269,12 @@ const ecommerceAppRoutes = {
             path: '/apps/ecommerce/customers',
             name: 'Customers',
             component: Customers,
+            route: PrivateRoute,
+        },
+        {
+            path: '/usuarios',
+            name: 'Usuarios',
+            component: Usuarios,
             route: PrivateRoute,
         },
         {

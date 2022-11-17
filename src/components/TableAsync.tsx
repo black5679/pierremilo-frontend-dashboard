@@ -90,10 +90,13 @@ interface TableAsyncProps {
         className?: string;
     }[];
     data: any[];
-    pageSize?: any;
+    total: number;
+    page: number;
+    pageSize: any;
     searchBoxClass?: string;
     tableClass?: string;
     theadClass?: string;
+    searchMethod: (limit: number, page: number) => void;
 }
 
 const TableAsync = (props: TableAsyncProps) => {
@@ -103,6 +106,8 @@ const TableAsync = (props: TableAsyncProps) => {
     const isSelectable = props['isSelectable'] || false;
     const isExpandable = props['isExpandable'] || false;
     const sizePerPageList = props['sizePerPageList'] || [];
+    const total = props['total'];
+    const searchMethod = props['searchMethod'];
 
     let otherProps: any = {};
 
@@ -121,12 +126,16 @@ const TableAsync = (props: TableAsyncProps) => {
     if (isSelectable) {
         otherProps['useRowSelect'] = useRowSelect;
     }
-
     const dataTable = useTable(
         {
             columns: props['columns'],
             data: props['data'],
-            initialState: { pageSize: props['pageSize'] || 10 },
+            initialState: { pageSize: props['pageSize'], pageIndex: props['page'] - 1 },
+            manualPagination: true,
+            manualFilters: true,
+            pageCount: Math.ceil(total/props['pageSize']),
+            pageIndex: props['page']-1,
+            pageSize: props['pageSize']
         },
         otherProps.hasOwnProperty('useGlobalFilter') && otherProps['useGlobalFilter'],
         otherProps.hasOwnProperty('useSortBy') && otherProps['useSortBy'],
@@ -190,7 +199,6 @@ const TableAsync = (props: TableAsyncProps) => {
     );
 
     let rows = pagination ? dataTable.page : dataTable.rows;
-
     return (
         <>
             {isSearchable && (
@@ -249,7 +257,7 @@ const TableAsync = (props: TableAsyncProps) => {
                     </tbody>
                 </table>
             </div>
-            {pagination && <PaginationAsync tableProps={dataTable} sizePerPageList={sizePerPageList} />}
+            {pagination && <PaginationAsync tableProps={dataTable} sizePerPageList={sizePerPageList} searchMethod={searchMethod}/>}
         </>
     );
 };

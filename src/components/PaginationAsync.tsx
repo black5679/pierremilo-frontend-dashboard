@@ -8,9 +8,10 @@ interface PaginationAsyncProps {
         text: string;
         value: number;
     }[];
+    searchMethod: (limit: number, page: number) => void;
 }
 
-const PaginationAsync = ({ tableProps, sizePerPageList }: PaginationAsyncProps) => {
+const PaginationAsync = ({ tableProps, sizePerPageList, searchMethod }: PaginationAsyncProps) => {
     /**
      * pagination count , index
      */
@@ -66,8 +67,7 @@ const PaginationAsync = ({ tableProps, sizePerPageList }: PaginationAsyncProps) 
 
         const visiblePages = getVisiblePages(page, pageCount);
         setVisiblePages(filterPages(visiblePages, pageCount));
-
-        tableProps.gotoPage(page - 1);
+        searchMethod(tableProps.pageSize, page);
     };
 
     useEffect(() => {
@@ -87,7 +87,7 @@ const PaginationAsync = ({ tableProps, sizePerPageList }: PaginationAsyncProps) 
                         <select
                             value={tableProps.state.pageSize}
                             onChange={(e: any) => {
-                                tableProps.setPageSize(Number(e.target.value));
+                                searchMethod(Number(e.target.value),1);
                             }}
                             className="form-select d-inline-block w-auto"
                         >
