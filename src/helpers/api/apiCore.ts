@@ -54,7 +54,8 @@ const setAuthorization = (token: string | null) => {
 
 const getUserFromCookie = () => {
     const user = sessionStorage.getItem(AUTH_SESSION_KEY);
-    return user ? (typeof user == 'object' ? user : JSON.parse(user)) : null;
+    const userObject = typeof user == 'object' ? user : JSON.parse(user)
+    return user ? userObject : null;
 };
 class APICore {
     /**
@@ -63,7 +64,7 @@ class APICore {
     get = (url: string, params: any) => {
         let response;
         if (params) {
-            var queryString = params
+            const queryString = params
                 ? Object.keys(params)
                       .map((key) => key + '=' + params[key])
                       .join('&')
@@ -78,7 +79,7 @@ class APICore {
     getFile = (url: string, params: any) => {
         let response;
         if (params) {
-            var queryString = params
+            const queryString = params
                 ? Object.keys(params)
                       .map((key) => key + '=' + params[key])
                       .join('&')

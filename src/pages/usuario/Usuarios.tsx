@@ -7,8 +7,9 @@ import classNames from 'classnames';
 import PageTitle from '../../components/PageTitle';
 import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from '../../redux/store';
-import { usuarioGetAllPaginate } from '../../redux/actions';
+import { usuarioChangePaginateQuery, usuarioOnInitBandeja, usuarioOpenModal } from '../../redux/actions';
 import TableAsync from '../../components/TableAsync';
+import UsuarioModal from './UsuarioModal';
 
 /* name column render */
 const ApellidosColumn = ({ row }: { row: any }) => {
@@ -30,7 +31,7 @@ const StatusColumn = ({ row }: { row: any }) => {
                     'badge-soft-danger': !row.original.estado,
                 })}
             >
-                {row.original.estado? 'Activo' : 'Inactivo'}
+                {row.original.estado ? 'Activo' : 'Inactivo'}
             </span>
         </React.Fragment>
     );
@@ -120,19 +121,26 @@ const sizePerPageList = [
 const Usuarios = () => {
     const dispatch = useDispatch<AppDispatch>();
 
-    const { usuarios, total, limit, page } = useSelector((state: RootState) => ({
+    const { usuarios, usuario, total, limit, page, open } = useSelector((state: RootState) => ({
         usuarios: state.Usuario.usuarios,
+        usuario: state.Usuario.usuario,
         total: state.Usuario.total,
         limit: state.Usuario.limit,
-        page: state.Usuario.page
+        page: state.Usuario.page,
+        open: state.Usuario.open
     }));
-    
+
     useEffect(() => {
-        dispatch(usuarioGetAllPaginate(limit,page));
-    }, [dispatch]);
+        dispatch(usuarioOnInitBandeja(limit, page));
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    },[]);
+
+    const toggleModal = () => {
+        dispatch(usuarioOpenModal(!open));
+    }
 
     const getAllPaginate = (limit: number, page: number) => {
-        dispatch(usuarioGetAllPaginate(limit,page));
+        dispatch(usuarioChangePaginateQuery(limit, page));
     }
 
     return (
@@ -155,7 +163,7 @@ const Usuarios = () => {
                         <Card.Body>
                             <Row>
                                 <Col sm={4}>
-                                    <Button className="btn btn-success mb-2">
+                                    <Button className="btn btn-success mb-2" onClick={toggleModal}>
                                         <i className="mdi mdi-plus-circle me-2"></i> Registrar
                                     </Button>
                                 </Col>
@@ -192,6 +200,7 @@ const Usuarios = () => {
                     </Card>
                 </Col>
             </Row>
+            <UsuarioModal usuario={usuario} open={open} toggleModal={toggleModal} />
         </React.Fragment>
     );
 };
